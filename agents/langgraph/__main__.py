@@ -69,7 +69,15 @@ def main(host, port):
             notification_sender_auth.handle_jwks_endpoint,
             methods=['GET'],
         )
-
+        # NEW: agent.json endpoint
+        server.app.add_route(
+            "/.well-known/agent.json",
+            lambda request: JSONResponse(
+                content=agent_card.model_dump()  # or .dict() / .json() as needed
+            ),
+            methods=["GET"],
+        )
+        
         logger.info(f'Starting server on {host}:{port}')
         server.start()
     except MissingAPIKeyError as e:
